@@ -1,188 +1,283 @@
-# 🌐 Lingua AI
+<div align="center">
 
-> An AI-powered language companion — translate, speak, and listen across languages with ease.
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:6C63FF,100:48CAE4&height=200&section=header&text=Lingua%20AI&fontSize=70&fontColor=ffffff&fontAlignY=38&desc=Break%20language%20barriers%20with%20the%20power%20of%20AI&descAlignY=58&descSize=18&animation=fadeIn" width="100%"/>
 
-![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white)
-![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart&logoColor=white)
-![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web%20%7C%20Desktop-lightgrey)
-![License](https://img.shields.io/badge/License-MIT-green)
+<br/>
+
+[![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
+[![License](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](LICENSE)
+[![CodeAlpha](https://img.shields.io/badge/CodeAlpha-Internship-FF6B6B?style=for-the-badge&logo=graduation-cap&logoColor=white)](https://codealpha.tech)
+
+<br/>
+
+[![Android](https://img.shields.io/badge/Android-✓-3DDC84?style=flat-square&logo=android&logoColor=white)](https://github.com/SarfrazTechie/CodeAlpha_lingua-Ai)
+[![iOS](https://img.shields.io/badge/iOS-✓-000000?style=flat-square&logo=apple&logoColor=white)](https://github.com/SarfrazTechie/CodeAlpha_lingua-Ai)
+[![Web](https://img.shields.io/badge/Web-✓-4285F4?style=flat-square&logo=googlechrome&logoColor=white)](https://github.com/SarfrazTechie/CodeAlpha_lingua-Ai)
+[![Windows](https://img.shields.io/badge/Windows-✓-0078D4?style=flat-square&logo=windows&logoColor=white)](https://github.com/SarfrazTechie/CodeAlpha_lingua-Ai)
+[![macOS](https://img.shields.io/badge/macOS-✓-000000?style=flat-square&logo=apple&logoColor=white)](https://github.com/SarfrazTechie/CodeAlpha_lingua-Ai)
+[![Linux](https://img.shields.io/badge/Linux-✓-FCC624?style=flat-square&logo=linux&logoColor=black)](https://github.com/SarfrazTechie/CodeAlpha_lingua-Ai)
+
+<br/>
+
+> *"Speak in your language. Be understood in every language."*
+
+</div>
+
+<br/>
 
 ---
 
-## 📖 About
+## 🌟 What is Lingua AI?
 
-**Lingua AI** is a cross-platform Flutter application that leverages AI to provide real-time language translation, speech-to-text input, and text-to-speech output. Built as part of the **CodeAlpha** internship program, it aims to break down language barriers with a seamless and intuitive user experience.
+**Lingua AI** is a beautifully crafted, cross-platform Flutter application that demolishes the language barrier. Powered by AI, it listens to your voice, understands what you say, translates it instantly, and speaks it back — all in a smooth, animated interface.
+
+Built as a flagship project for the **CodeAlpha Flutter Internship**, Lingua AI combines cutting-edge AI APIs with a polished mobile-first design to deliver a truly magical experience.
 
 ---
 
 ## ✨ Features
 
-- 🎙️ **Speech-to-Text** — Speak naturally and let the app transcribe your voice in real time
-- 🔊 **Text-to-Speech** — Hear translated text read aloud with natural-sounding voice
-- 🌍 **AI-Powered Translation** — Translate text across multiple languages via HTTP API
-- 💾 **Persistent Preferences** — Saves your language settings using SharedPreferences
-- 🎵 **Audio Playback** — Play back translated audio with the audioplayers engine
-- 📤 **Share Results** — Share translated text directly via the share_plus plugin
-- ✨ **Smooth Animations** — Lottie animations and shimmer loading effects for a polished UI
-- 🎨 **Google Fonts** — Beautiful, expressive typography throughout the app
-- 🌙 **State Management** — Clean architecture powered by the Provider package
+<table>
+<tr>
+<td width="50%">
+
+### 🎙️ Voice Input
+Speak naturally — the app transcribes your voice in real time using `speech_to_text`, no typing needed.
+
+</td>
+<td width="50%">
+
+### 🔊 Text-to-Speech
+Hear every translation spoken aloud with expressive, natural-sounding voices via `flutter_tts`.
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🌍 AI Translation
+Instant, accurate translation across dozens of languages powered by a cloud AI API over HTTP.
+
+</td>
+<td width="50%">
+
+### 💾 Smart Persistence
+Your language preferences and history are saved locally with `shared_preferences` — always where you left off.
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🎵 Audio Playback
+Full audio engine via `audioplayers` — play, pause, and replay translated speech on demand.
+
+</td>
+<td width="50%">
+
+### 📤 One-Tap Sharing
+Share your translated text to any app instantly using the `share_plus` plugin.
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### ✨ Lottie Animations
+Silky smooth Lottie animations and shimmer loading states for a premium, app-store-quality UI.
+
+</td>
+<td width="50%">
+
+### 🎨 Gorgeous Typography
+Curated Google Fonts pairings for a beautiful, readable, and expressive visual experience.
+
+</td>
+</tr>
+</table>
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | Flutter 3.x / Dart 3.x |
-| State Management | Provider |
-| Networking | http |
-| Voice Input | speech_to_text |
-| Voice Output | flutter_tts |
-| Audio | audioplayers |
-| Storage | shared_preferences |
-| Sharing | share_plus |
-| Fonts | google_fonts |
-| Animations | lottie, shimmer |
-| Environment | flutter_dotenv |
-| Localization | intl |
+<div align="center">
+
+| Category | Technology | Version |
+|:---:|:---:|:---:|
+| 📱 **Framework** | Flutter / Dart | `^3.10.3` |
+| 🧠 **State Management** | Provider | `^6.1.2` |
+| 🌐 **Networking** | http | `^1.2.1` |
+| 🎙️ **Voice Input** | speech_to_text | `^7.4.0` |
+| 🔊 **Text-to-Speech** | flutter_tts | `^4.0.2` |
+| 🎵 **Audio Engine** | audioplayers | `^6.1.0` |
+| 💾 **Local Storage** | shared_preferences | `^2.2.3` |
+| 📤 **Sharing** | share_plus | `13.1.0` |
+| 🎨 **Typography** | google_fonts | `^6.2.1` |
+| ✨ **Animations** | lottie + shimmer | `^3.1.2` |
+| 🔐 **Environment** | flutter_dotenv | `^5.1.0` |
+| 🌍 **Localization** | intl | `^0.19.0` |
+
+</div>
 
 ---
 
 ## 📁 Project Structure
 
 ```
-lingua_ai/
-├── android/          # Android platform files
-├── ios/              # iOS platform files
-├── linux/            # Linux desktop platform files
-├── macos/            # macOS desktop platform files
-├── windows/          # Windows desktop platform files
-├── web/              # Web platform files
-├── lib/              # Main Dart source code
-│   ├── main.dart     # App entry point
-│   ├── screens/      # UI screens
-│   ├── widgets/      # Reusable widgets
-│   ├── services/     # API & business logic
-│   └── providers/    # State management
-├── .env              # Environment variables (API keys)
-├── pubspec.yaml      # Dependencies & project config
-└── README.md
+🗂️ CodeAlpha_lingua-Ai/
+│
+├── 📱 android/              ── Android platform files
+├── 🍎 ios/                  ── iOS platform files
+├── 🌐 web/                  ── Web platform files
+├── 🖥️ windows/              ── Windows desktop files
+├── 🍏 macos/                ── macOS desktop files
+├── 🐧 linux/                ── Linux desktop files
+│
+├── 📦 lib/                  ── Main Dart source code
+│   ├── 🚀 main.dart         ── App entry point
+│   ├── 🖼️  screens/         ── UI screens & pages
+│   ├── 🧩 widgets/          ── Reusable UI components
+│   ├── ⚙️  services/         ── API calls & business logic
+│   └── 🔄 providers/        ── State management
+│
+├── 🔐 .env                  ── API keys (not committed)
+├── 📋 pubspec.yaml          ── Dependencies & config
+└── 📖 README.md
 ```
 
 ---
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### 📋 Prerequisites
 
-- [Flutter SDK](https://docs.flutter.dev/get-started/install) `^3.10.3`
-- Dart `^3.x`
-- An API key for your AI translation service
+Before you begin, ensure you have the following installed:
 
-### Installation
+- ✅ [Flutter SDK](https://docs.flutter.dev/get-started/install) `^3.10.3`
+- ✅ Dart `^3.x`
+- ✅ Android Studio / Xcode (for mobile targets)
+- ✅ An AI Translation API key
+
+---
+
+### ⚡ Quick Setup
 
 ```bash
-# 1. Clone the repository
+# 📥 Step 1 — Clone the repository
 git clone https://github.com/SarfrazTechie/CodeAlpha_lingua-Ai.git
 cd CodeAlpha_lingua-Ai
 
-# 2. Set up environment variables
-# Edit the .env file and add your API key:
-# AI_API_KEY=your_api_key_here
+# 🔐 Step 2 — Configure environment variables
+# Open .env and add your API key:
+echo "AI_API_KEY=your_api_key_here" > .env
 
-# 3. Install dependencies
+# 📦 Step 3 — Install dependencies
 flutter pub get
 
-# 4. Run the app
+# ▶️  Step 4 — Launch the app
 flutter run
 ```
 
-### Run on a specific platform
+---
+
+### 🎯 Platform-Specific Runs
 
 ```bash
-flutter run -d android     # Android
-flutter run -d ios         # iOS
-flutter run -d chrome      # Web
-flutter run -d windows     # Windows
-flutter run -d linux       # Linux
-flutter run -d macos       # macOS
+flutter run -d android     # 📱 Android device/emulator
+flutter run -d ios         # 🍎 iOS simulator/device
+flutter run -d chrome      # 🌐 Web browser
+flutter run -d windows     # 🖥️  Windows desktop
+flutter run -d linux       # 🐧 Linux desktop
+flutter run -d macos       # 🍏 macOS desktop
 ```
 
 ---
 
-## ⚙️ Environment Variables
+## 🔐 Environment Setup
 
-Create or update the `.env` file in the project root:
+Create a `.env` file in the project root:
 
 ```env
+# 🔑 Your AI Translation API Key
 AI_API_KEY=your_translation_api_key_here
 ```
 
-> ⚠️ Never commit your real API keys to version control. The `.env` file is already listed in `.gitignore`.
+> [!WARNING]
+> Never commit your `.env` file with real API keys. It is already listed in `.gitignore` — keep it that way.
 
 ---
 
-## 📦 Dependencies
+## 📲 Required Permissions
 
-```yaml
-provider: ^6.1.2          # State management
-http: ^1.2.1              # API calls
-shared_preferences: ^2.2.3 # Local storage
-speech_to_text: ^7.4.0    # Voice input
-flutter_tts: ^4.0.2       # Text-to-speech
-audioplayers: ^6.1.0      # Audio playback
-share_plus: 13.1.0        # Share functionality
-intl: ^0.19.0             # Internationalization
-google_fonts: ^6.2.1      # Typography
-flutter_dotenv: ^5.1.0    # Environment config
-lottie: ^3.1.2            # Animations
-shimmer: ^3.0.0           # Loading effects
-```
+<details>
+<summary><b>🤖 Android</b> — <code>android/app/src/main/AndroidManifest.xml</code></summary>
 
----
-
-## 🔐 Permissions
-
-The app requires the following permissions:
-
-**Android** (`android/app/src/main/AndroidManifest.xml`):
 ```xml
 <uses-permission android:name="android.permission.INTERNET"/>
 <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 ```
+</details>
 
-**iOS** (`ios/Runner/Info.plist`):
+<details>
+<summary><b>🍎 iOS</b> — <code>ios/Runner/Info.plist</code></summary>
+
 ```xml
 <key>NSMicrophoneUsageDescription</key>
-<string>This app needs microphone access for speech recognition.</string>
+<string>Lingua AI needs microphone access for voice translation.</string>
 <key>NSSpeechRecognitionUsageDescription</key>
-<string>This app uses speech recognition for voice translation.</string>
+<string>Lingua AI uses speech recognition to transcribe your voice.</string>
 ```
+</details>
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! To get started:
+Contributions, issues and feature requests are welcome!
 
 ```bash
-# Fork the repo, then:
-git checkout -b feature/your-feature-name
-git commit -m "Add your feature"
-git push origin feature/your-feature-name
-# Open a Pull Request
+# 1️⃣  Fork the repository
+# 2️⃣  Create your feature branch
+git checkout -b feature/amazing-feature
+
+# 3️⃣  Commit your changes
+git commit -m "✨ Add amazing feature"
+
+# 4️⃣  Push to the branch
+git push origin feature/amazing-feature
+
+# 5️⃣  Open a Pull Request 🎉
 ```
 
 ---
 
 ## 👤 Author
 
-**Sarfraz** — [@SarfrazTechie](https://github.com/SarfrazTechie)
+<div align="center">
 
-Built during the **CodeAlpha** Flutter Internship Program.
+<img src="https://avatars.githubusercontent.com/SarfrazTechie" width="80" style="border-radius:50%"/>
+
+**Sarfraz**
+
+[![GitHub](https://img.shields.io/badge/GitHub-@SarfrazTechie-181717?style=for-the-badge&logo=github)](https://github.com/SarfrazTechie)
+
+*Built with ❤️ during the **CodeAlpha** Flutter Internship Program*
+
+</div>
 
 ---
 
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:48CAE4,100:6C63FF&height=120&section=footer" width="100%"/>
+
+**⭐ Star this repo if Lingua AI helped or inspired you!**
+
+</div>
