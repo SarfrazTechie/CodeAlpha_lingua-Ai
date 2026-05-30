@@ -1,0 +1,501 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import '../providers/translation_provider.dart';
+import '../providers/groq_provider.dart';
+import '../theme/app_colors.dart';
+import '../widgets/language_picker.dart';
+import '../widgets/ai_enhance_sheet.dart';
+
+class TranslatorScreen extends StatefulWidget {
+  const TranslatorScreen({super.key});
+
+  @override
+  State<TranslatorScreen> createState() => _TranslatorScreenState();
+}
+
+class _TranslatorScreenState extends State<TranslatorScreen> {
+  final TextEditingController _inputController = TextEditingController();
+  final SpeechToText _speech = SpeechToText();
+  final FlutterTts _tts = FlutterTts();
+
+  bool _isListening = false;
+  bool _speechAvailable = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initSpeech();
+  }
+
+  Future<void> _initSpeech() async {
+    _speechAvailable = await _speech.initialize();
+    setState(() {});
+  }
+
+  Future<void> _startListening() async {
+    if (!_speechAvailable) return;
+    await _speech.listen(
+      onResult: (result) {
+        _inputController.text = result.recognizedWords;
+        context.read<TranslationProvider>().onSourceTextChanged(
+          result.recognizedWords,
+        );
+      },
+    );
+    setState(() => _isListening = true);
+  }
+
+  Future<void> _stopListening() async {
+    await _speech.stop();
+    setState(() => _isListening = false);
+  }
+
+  Future<void> _speak(String text, String lang) async {
+    await _tts.setLanguage(lang);
+    await _tts.speak(text);
+  }
+
+  void _showEnhanceSheet() {
+    final provider = context.read<TranslationProvider>();
+    if (provider.sourceText.isEmpty || provider.translatedText.isEmpty) return;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => AiEnhanceSheet(
+        sourceText: provider.sourceText,
+        translatedText: provider.translatedText,
+        sourceLang: provider.sourceLang,
+        targetLang: provider.targetLang,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _inputController.dispose();
+    _speech.cancel();
+    _tts.stop();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = context.watch<TranslationProvider>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Translator'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history_rounded),
+            onPressed: () => Navigator.pushNamed(context, '/history'),
+            tooltip: 'History',
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // Language picker row
+            Row(
+              children: [
+                Expanded(
+                  child: LanguagePicker(
+                    selected: provider.sourceLang,
+                    onChanged: provider.setSourceLang,
+                    label: 'From',
+                  ),
+                ),
+                // Swap button
+                GestureDetector(
+                  onTap: () {
+                    provider.swapLanguages();
+                    _inputController.text = provider.sourceText;
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.swap_horiz_rounded,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: LanguagePicker(
+                    selected: provider.targetLang,
+                    onChanged: provider.setTargetLang,
+                    label: 'To',
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            // Source input card
+            Container(
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                  width: 0.5,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    controller: _inputController,
+                    maxLines: 5,
+                    minLines: 3,
+                    decoration: InputDecoration(
+                      hintText: 'Enter text to translate...',
+                      border: InputBorder.none,
+                      filled: false,
+                      contentPadding: const EdgeInsets.all(16),
+                      suffixIcon: _inputController.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear_rounded, size: 18),
+                              onPressed: () {
+                                _inputController.clear();
+                                provider.clearInput();
+                              },
+                            )
+                          : null,
+                    ),
+                    onChanged: provider.onSourceTextChanged,
+                  ),
+                  // Bottom toolbar
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    child: Row(
+                      children: [
+                        // Speaker button for source text
+                      if (provider.sourceText.isNotEmpty)  
+                        IconButton(
+                          icon: const Icon(Icons.volume_up_rounded, size: 20),
+                          onPressed: () => _speak(
+                            _inputController.text,
+                            provider.sourceLang,
+                          ),
+                          color: AppColors.primary,
+                          tooltip: "Listen source",
+                        ),
+                        // Mic button
+                        IconButton(
+                          icon: Icon(
+                            _isListening
+                                ? Icons.mic_rounded
+                                : Icons.mic_none_rounded,
+                            color: _isListening
+                                ? AppColors.error
+                                : AppColors.textSecondaryLight,
+                          ),
+                          onPressed: _speechAvailable
+                              ? (_isListening
+                                    ? _stopListening
+                                    : _startListening)
+                              : null,
+                          tooltip: 'Voice input',
+                        ),
+                        const Spacer(),
+                        // Character counter
+                        Text(
+                          '${provider.sourceText.length}/500',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            // Translation output card
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.primary.withOpacity(0.08),
+                    AppColors.accent.withOpacity(0.05),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: AppColors.primary.withOpacity(0.2),
+                  width: 0.5,
+                ),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (provider.isTranslating)
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    )
+                  else if (provider.error != null)
+                    Text(
+                      provider.error!,
+                      style: const TextStyle(color: AppColors.error),
+                    )
+                  else
+                    Text(
+                      provider.translatedText.isEmpty
+                          ? 'Translation will appear here...'
+                          : provider.translatedText,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: provider.translatedText.isEmpty
+                            ? (isDark
+                                  ? AppColors.textSecondaryDark
+                                  : AppColors.textSecondaryLight)
+                            : null,
+                      ),
+                    ),
+
+                  if (provider.translatedText.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        // TTS
+                        IconButton(
+                          icon: const Icon(Icons.volume_up_rounded, size: 20),
+                          onPressed: () => _speak(
+                            provider.translatedText,
+                            provider.targetLang,
+                          ),
+                          tooltip: 'Listen',
+                          color: AppColors.primary,
+                        ),
+                        // Copy
+                        IconButton(
+                          icon: const Icon(Icons.copy_rounded, size: 20),
+                          onPressed: () {
+                            Clipboard.setData(
+                              ClipboardData(text: provider.translatedText),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Copied to clipboard'),
+                              ),
+                            );
+                          },
+                          tooltip: 'Copy',
+                          color: AppColors.primary,
+                        ),
+                        // Share
+                        IconButton(
+                          icon: const Icon(Icons.share_rounded, size: 20),
+                          onPressed: () => Share.share(provider.translatedText),
+                          tooltip: 'Share',
+                          color: AppColors.primary,
+                        ),
+                        // Word detail
+                        IconButton(
+                          icon: const Icon(
+                            Icons.info_outline_rounded,
+                            size: 20,
+                          ),
+                          onPressed: () => Navigator.pushNamed(
+                            context,
+                            '/word-detail',
+                            arguments: provider.sourceText
+                                .trim()
+                                .split(' ')
+                                .first,
+                          ),
+                          tooltip: 'Word detail',
+                          color: AppColors.primary,
+                        ),
+                        const Spacer(),
+                        // AI Enhance button
+                        FilledButton.icon(
+                          onPressed: _showEnhanceSheet,
+                          icon: const Text('⚡', style: TextStyle(fontSize: 13)),
+                          label: const Text('AI Enhance'),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: AppColors.groqOrange,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
+                            textStyle: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Quick phrases
+            _QuickPhrases(
+              onPhraseTap: (phrase) {
+                _inputController.text = phrase;
+                provider.onSourceTextChanged(phrase);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PulsingMic extends StatefulWidget {
+  const _PulsingMic();
+  @override
+  State<_PulsingMic> createState() => _PulsingMicState();
+}
+class _PulsingMicState extends State<_PulsingMic> with SingleTickerProviderStateMixin {
+  late AnimationController _c;
+  late Animation<double> _a;
+  @override
+  void initState() {
+    super.initState();
+    _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 700))..repeat(reverse: true);
+    _a = Tween<double>(begin: 0.8, end: 1.3).animate(CurvedAnimation(parent: _c, curve: Curves.easeInOut));
+  }
+  @override
+  void dispose() { _c.dispose(); super.dispose(); }
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _a,
+      builder: (_, __) => Stack(
+        alignment: Alignment.center,
+        children: [
+          Transform.scale(scale: _a.value, child: Container(width: 28, height: 28, decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.error.withOpacity(0.2)))),
+          const Icon(Icons.mic_rounded, color: AppColors.error, size: 20),
+        ],
+      ),
+    );
+  }
+}
+
+class _PulsingMic extends StatefulWidget {
+  const _PulsingMic();
+  @override State<_PulsingMic> createState() => _PulsingMicState();
+}
+class _PulsingMicState extends State<_PulsingMic> with SingleTickerProviderStateMixin {
+  late AnimationController _c; late Animation<double> _a;
+  @override void initState() { super.initState(); _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 700))..repeat(reverse: true); _a = Tween<double>(begin: 0.8, end: 1.3).animate(CurvedAnimation(parent: _c, curve: Curves.easeInOut)); }
+  @override void dispose() { _c.dispose(); super.dispose(); }
+  @override Widget build(BuildContext context) { return AnimatedBuilder(animation: _a, builder: (_, __) => Stack(alignment: Alignment.center, children: [Transform.scale(scale: _a.value, child: Container(width: 28, height: 28, decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.error.withOpacity(0.2)))), const Icon(Icons.mic_rounded, color: AppColors.error, size: 20)])); }
+}
+
+class _QuickPhrases extends StatelessWidget {
+  final void Function(String) onPhraseTap;
+
+  const _QuickPhrases({required this.onPhraseTap});
+
+  static const Map<String, List<String>> _phrases = {
+    '✈️ Travel': [
+      'Where is the airport?',
+      'How much does this cost?',
+      'I need help',
+    ],
+    '👋 Greetings': ['Hello!', 'Good morning', 'Thank you very much'],
+    '🏥 Medical': [
+      'I need a doctor',
+      'Call an ambulance',
+      'I am allergic to...',
+    ],
+    '💼 Business': [
+      'Nice to meet you',
+      'Can we schedule a meeting?',
+      'Please send me the report',
+    ],
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Quick Phrases', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 10),
+        ..._phrases.entries.map(
+          (entry) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                entry.key,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: entry.value
+                    .map(
+                      (phrase) => GestureDetector(
+                        onTap: () => onPhraseTap(phrase),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.outline,
+                              width: 0.5,
+                            ),
+                          ),
+                          child: Text(
+                            phrase,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+              const SizedBox(height: 12),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
